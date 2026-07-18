@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Данил — Консультант по банковским продуктам</title>
+<style>
+    :root {
+        --bg: #060607;
+        --bg-soft: #0d0d10;
+        --white: #ffffff;
+        --muted: #8a8a92;
+        --glass: rgba(255, 255, 255, 0.04);
+        --glass-border: rgba(255, 255, 255, 0.09);
+        --neon: #6ee7ff;
+        --neon2: #a78bfa;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--white);
+        line-height: 1.55;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient neon background glow */
+    body::before {
+        content: "";
+        position: fixed;
+        top: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 900px;
+        height: 900px;
+        background: radial-gradient(circle, rgba(110, 231, 255, 0.09) 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    body::after {
+        content: "";
+        position: fixed;
+        bottom: -25%;
+        right: -10%;
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .container {
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* NAV */
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+        padding: 18px 0;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        background: rgba(6, 6, 7, 0.55);
+        border-bottom: 1px solid transparent;
+        transition: all .4s ease;
+    }
+    nav.scrolled {
+        border-bottom: 1px solid var(--glass-border);
+        background: rgba(6, 6, 7, 0.8);
+    }
+    nav .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .logo {
+        font-weight: 600;
+        font-size: 1.1rem;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .logo span {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--neon);
+        box-shadow: 0 0 12px var(--neon);
+    }
+    .nav-links {
+        display: flex;
+        gap: 34px;
+        list-style: none;
+    }
+    .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color .25s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+        padding: 9px 22px;
+        border-radius: 100px;
+        background: var(--white);
+        color: #000;
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 600;
+        transition: transform .25s, box-shadow .25s;
+    }
+    .nav-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(255,255,255,0.18);
+    }
+    @media (max-width: 860px) {
+        .nav-links { display: none; }
+    }
+
+    /* HERO */
+    .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 140px 0 80px;
+    }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        border-radius: 100px;
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(10px);
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-bottom: 32px;
+    }
+    .hero-badge .dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 10px #4ade80;
+    }
+    .hero h1 {
+        font-size: clamp(2.3rem, 6vw, 4.6rem);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        line-height: 1.04;
+        margin-bottom: 28px;
+        background: linear-gradient(180deg, #ffffff 40%, #9a9aa5 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .hero h1 em {
+        font-style: normal;
+        background: linear-gradient(90deg, var(--neon), var(--neon2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+        font-size: clamp(1rem, 2vw, 1.22rem);
+        color: var(--muted);
+        max-width: 640px;
+        margin-bottom: 42px;
+    }
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 38px;
+        border-radius: 100px;
+        background: var(--white);
+        color: #000;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.02rem;
+        transition: transform .3s, box-shadow .3s;
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(110,231,255,0.35);
+    }
+    .btn-primary svg { transition: transform .3s; }
+    .btn-primary:hover svg { transform: translateX(4px); }
+
+    /* SECTION base */
+    section { padding: 110px 0; position: relative; }
+    .section-tag {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--neon);
+        margin-bottom: 18px;
+        display: block;
+    }
+    .section-title {
+        font-size: clamp(1.9rem, 4vw, 3rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 20px;
+    }
+    .section-sub {
+        color: var(--muted);
+        font-size: 1.08rem;
+        max-width: 620px;
+        margin-bottom: 60px;
+    }
+
+    /* ABOUT */
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+    .about-text p {
+        color: var(--muted);
+        font-size: 1.08rem;
+        margin-bottom: 22px;
+    }
+    .about-text strong { color: var(--white); font-weight: 600; }
+    .about-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+    .stat-card {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 22px;
+        padding: 30px 26px;
+        backdrop-filter: blur(14px);
+        transition: transform .35s, border-color .35s;
+    }
+    .stat-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(110,231,255,0.4);
+    }
+    .stat-card .num {
+        font-size: 2.6rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        background: linear-gradient(90deg, var(--neon), var(--neon2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .stat-card .lbl { color: var(--muted); font-size: 0.92rem; margin-top: 6px; }
+    @media (max-width: 860px) {
+        .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    /* SERVICES */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+    }
+    .service-card {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 26px;
+        padding: 38px 34px;
+        backdrop-filter: blur(16px);
+        position: relative;
+        overflow: hidden;
+        transition: transform .4s cubic-bezier(.2,.8,.2,1), border-color .4s;
+    }
+    .service-card::before {
+        content: "";
+        position: absolute;
+        top: -40%; right: -40%;
+        width: 240px; height: 240px;
+        background: radial-gradient(circle, rgba(110,231,255,0.16), transparent 70%);
+        opacity: 0;
+        transition: opacity .5s;
+    }
+    .service-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(255,255,255,0.22);
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-card .icon {
+        width: 52px; height: 52px;
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--glass-border);
+        margin-bottom: 24px;
+    }
+    .service-card h3 {
+        font-size: 1.35rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+    }
+    .service-price {
+        display: inline-block;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--neon);
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: rgba(110,231,255,0.08);
+        border: 1px solid rgba(110,231,255,0.2);
+        margin-bottom: 20px;
+    }
+    .service-card ul { list-style: none; }
+    .service-card ul li {
+        color: var(--muted);
+        font-size: 0.98rem;
+        padding: 7px 0 7px 26px;
+        position: relative;
+    }
+    .service-card ul li::before {
+        content: "";
+        position: absolute;
+        left: 0; top: 14px;
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--neon);
+        box-shadow: 0 0 8px var(--neon);
+    }
+    .service-card p {
+        color: var(--muted);
+        font-size: 0.98rem;
+    }
+    @media (max-width: 780px) {
+        .services-grid { grid-template-columns: 1fr; }
+    }
+
+    /* HIGHLIGHT paid feedback banner */
+    .paid-banner {
+        margin-top: 26px;
+        background: linear-gradient(120deg, rgba(110,231,255,0.1), rgba(167,139,250,0.1));
+        border: 1px solid rgba(167,139,250,0.25);
+        border-radius: 22px;
+        padding: 30px 34px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        backdrop-filter: blur(14px);
+    }
+    .paid-banner .pb-icon {
+        font-size: 2rem;
+        flex-shrink: 0;
+    }
+    .paid-banner strong { color: var(--white); }
+    .paid-banner p { color: var(--muted); font-size: 1rem; }
+    @media (max-width: 620px) {
+        .paid-banner { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ADVANTAGES */
+    .adv-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+    .adv-card {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 22px;
+        padding: 34px 30px;
+        backdrop-filter: blur(14px);
+        transition: transform .35s, border-color .35s, background .35s;
+    }
+    .adv-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(110,231,255,0.35);
+        background: rgba(255,255,255,0.06);
+    }
+    .adv-card .adv-icon {
+        width: 46px; height: 46px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        background: linear-gradient(135deg, rgba(110,231,255,0.2), rgba(167,139,250,0.2));
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+    }
+    .adv-card h4 {
+        font-size: 1.12rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+    }
+    .adv-card p { color: var(--muted); font-size: 0.94rem; }
+    @media (max-width: 880px) {
+        .adv-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+        .adv-grid { grid-template-columns: 1fr; }
+    }
+
+    /* FAQ */
+    .faq-item {
+        border-bottom: 1px solid var(--glass-border);
+        padding: 4px 0;
+    }
+    .faq-q {
+        width: 100%;
+        background: none;
+        border: none;
+        color: var(--white);
+        text-align: left;
+        font-size: 1.15rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        padding: 26px 0;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        font-family: inherit;
+    }
+    .faq-q .plus {
+        flex-shrink: 0;
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        border: 1px solid var(--glass-border);
+        display: flex; align-items: center; justify-content: center;
+        transition: transform .35s, background .35s;
+        position: relative;
+    }
+    .faq-q .plus::before, .faq-q .plus::after {
+        content: "";
+        position: absolute;
+        background: var(--white);
+        transition: transform .35s;
+    }
+    .faq-q .plus::before { width: 12px; height: 1.6px; }
+    .faq-q .plus::after { width: 1.6px; height: 12px; }
+    .faq-item.active .plus { transform: rotate(135deg); background: var(--neon); }
+    .faq-item.active .plus::before,
+    .faq-item.active .plus::after { background: #000; }
+    .faq-a {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .4s ease, padding .4s ease;
+    }
+    .faq-a p {
+        color: var(--muted);
+        font-size: 1rem;
+        padding-bottom: 26px;
+        max-width: 760px;
+    }
+
+    /* CONTACT CTA */
+    .cta {
+        text-align: center;
+    }
+    .cta-box {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 34px;
+        padding: 80px 40px;
+        backdrop-filter: blur(18px);
+        position: relative;
+        overflow: hidden;
+    }
+    .cta-box::before {
+        content: "";
+        position: absolute;
+        top: -50%; left: 50%;
+        transform: translateX(-50%);
+        width: 500px; height: 500px;
+        background: radial-gradient(circle, rgba(110,231,255,0.15), transparent 65%);
+        pointer-events: none;
+    }
+    .cta-box h2 {
+        font-size: clamp(1.8rem, 4vw, 3rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin-bottom: 18px;
+        position: relative;
+    }
+    .cta-box p {
+        color: var(--muted);
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    /* FOOTER */
+    footer {
+        padding: 50px 0 40px;
+        border-top: 1px solid var(--glass-border);
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.88rem;
+    }
+    footer a { color: var(--neon); text-decoration: none; }
+
+    /* Scroll reveal */
+    .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
+    }
+    .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+    <div class="container">
+        <div class="logo"><span></span>Данил · Финансы</div>
+        <ul class="nav-links">
+            <li><a href="#about">Обо мне</a></li>
+            <li><a href="#services">Услуги</a></li>
+            <li><a href="#advantages">Преимущества</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <a href="https://t.me/dnl105" class="nav-cta" target="_blank">Связаться</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <div class="container">
+        <div class="hero-badge reveal"><span class="dot"></span>Онлайн · Отвечаю быстро</div>
+        <h1 class="reveal">Заместитель глав-менеджера Альфа-банка и <em>консультант по банковским продуктам</em></h1>
+        <p class="reveal">Меня зовут Данил, мне 24 года. Помогаю подобрать и оформить банковские продукты, консультирую по финансовым решениям и сопровождаю клиентов на всех этапах.</p>
+        <a href="https://t.me/dnl105" class="btn-primary reveal" target="_blank">
+            Связаться
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+    </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+    <div class="container">
+        <span class="section-tag reveal">Обо мне</span>
+        <h2 class="section-title reveal">Финансовый специалист,<br>которому доверяют</h2>
+        <div class="about-grid" style="margin-top:50px;">
+            <div class="about-text reveal">
+                <p>За <strong>пять лет работы</strong> в финансовой сфере я помог сотням клиентов разобраться в банковских продуктах и выбрать действительно подходящие решения — без лишних сложностей и переплат.</p>
+                <p>Я <strong>подбираю банковские продукты</strong> под конкретные задачи, <strong>сопровождаю оформление</strong> от первой заявки до подключения и остаюсь на связи после. Каждому клиенту — <strong>индивидуальный подход</strong> и <strong>оперативная консультация</strong> в удобном формате.</p>
+                <p>Моя цель — сделать взаимодействие с банками простым, прозрачным и выгодным для вас.</p>
+            </div>
+            <div class="about-stats reveal">
+                <div class="stat-card"><div class="num">5+</div><div class="lbl">лет в финансах</div></div>
+                <div class="stat-card"><div class="num">500+</div><div class="lbl">клиентов</div></div>
+                <div class="stat-card"><div class="num">24/7</div><div class="lbl">на связи</div></div>
+                <div class="stat-card"><div class="num">100%</div><div class="lbl">сопровождение</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+    <div class="container">
+        <span class="section-tag reveal">Услуги</span>
+        <h2 class="section-title reveal">Что я предлагаю</h2>
+        <p class="section-sub reveal">Помогаю оформить финансовые продукты и плачу за участие в исследованиях и написание отзывов о банковских услугах.</p>
+
+        <div class="services-grid">
+            <!-- Card 1 -->
+            <div class="service-card reveal">
+                <div class="icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                </div>
+                <h3>Дебетовые карты</h3>
+                <div class="service-price">Оплата от 2 000 до 5 000 ₽</div>
+                <ul>
+                    <li>Подбор подходящей карты</li>
+                    <li>Консультация</li>
+                    <li>Помощь с оформлением</li>
+                </ul>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="service-card reveal">
+                <div class="icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+                </div>
+                <h3>Регистрация ИП</h3>
+                <div class="service-price">Оплата от 8 000 до 19 000 ₽</div>
+                <ul>
+                    <li>Консультация</li>
+                    <li>Сопровождение</li>
+                    <li>Ответы на вопросы</li>
+                </ul>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="service-card reveal">
+                <div class="icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><circle cx="8" cy="15" r="1.5"/></svg>
+                </div>
+                <h3>Расчётный счёт (РКО)</h3>
+                <div class="service-price">Оплата от 4 000 до 9 500 ₽</div>
+                <ul>
+                    <li>Подбор тарифа</li>
+                    <li>Помощь с оформлением</li>
+                    <li>Сопровождение подключения</li>
+                </ul>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="service-card reveal">
+                <div class="icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17.3 5.8 20.6l1.6-6.7L2.2 8.9l6.9-.6z"/></svg>
+                </div>
+                <h3>Вознаграждение за участие в исследованиях качества сервиса</h3>
+                <div class="service-price">Оплата индивидуально</div>
+                <p>В некоторых проектах проводится оплачиваемый сбор обратной связи о банковских продуктах. Если в настоящий момент есть доступные программы, размер вознаграждения и условия участия отображаются отдельно для каждой программы.</p>
+            </div>
+        </div>
+
+        <!-- Paid feedback highlight -->
+        <div class="paid-banner reveal">
+            <div class="pb-icon">💸</div>
+            <div>
+                <p><strong>Плачу за написание отзывов о банковских продуктах.</strong> Оставьте честную обратную связь об оформленных услугах — и получите вознаграждение. Условия и размер оплаты обсуждаем индивидуально в Telegram.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ADVANTAGES -->
+<section id="advantages">
+    <div class="container">
+        <span class="section-tag reveal">Преимущества</span>
+        <h2 class="section-title reveal">Почему выбирают меня</h2>
+        <p class="section-sub reveal">Современный подход, прозрачность и внимание к каждому клиенту.</p>
+        <div class="adv-grid">
+            <div class="adv-card reveal"><div class="adv-icon">⚡</div><h4>Быстрая консультация</h4><p>Отвечаю оперативно и по существу — без ожиданий.</p></div>
+            <div class="adv-card reveal"><div class="adv-icon">🎯</div><h4>Индивидуальный подбор</h4><p>Решения под ваши конкретные задачи и цели.</p></div>
+            <div class="adv-card reveal"><div class="adv-icon">🧭</div><h4>Понятное сопровождение</h4><p>Провожу через каждый шаг оформления простым языком.</p></div>
+            <div class="adv-card reveal"><div class="adv-icon">✨</div><h4>Современный подход</h4><p>Актуальные продукты и удобные цифровые инструменты.</p></div>
+            <div class="adv-card reveal"><div class="adv-icon">💬</div><h4>Онлайн-взаимодействие</h4><p>Всё дистанционно — из любой точки и в удобное время.</p></div>
+            <div class="adv-card reveal"><div class="adv-icon">🛡️</div><h4>Поддержка клиентов</h4><p>Остаюсь на связи и после оформления услуги.</p></div>
+            <div class="adv-card reveal"><div class="adv-icon">🏆</div><h4>Пятилетний опыт</h4><p>5 лет работы в финансовой сфере и сотни клиентов.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <span class="section-tag reveal">FAQ</span>
+        <h2 class="section-title reveal">Частые вопросы</h2>
+        <div style="margin-top:40px;">
+            <div class="faq-item reveal">
+                <button class="faq-q">Как проходит консультация?<span class="plus"></span></button>
+                <div class="faq-a"><p>Консультация проходит онлайн в Telegram. Вы описываете задачу, я задаю уточняющие вопросы и предлагаю подходящие банковские продукты с понятным объяснением условий.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Какие услуги оказываются?<span class="plus"></span></button>
+                <div class="faq-a"><p>Подбор и оформление дебетовых карт, регистрация ИП, открытие расчётного счёта (РКО), а также оплачиваемое участие в исследованиях качества сервиса и написание отзывов о банковских продуктах.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Сколько времени занимает оформление?<span class="plus"></span></button>
+                <div class="faq-a"><p>Зависит от продукта. Дебетовую карту можно оформить в тот же день, регистрация ИП и открытие счёта обычно занимают несколько рабочих дней. Точные сроки уточним на консультации.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Как связаться?<span class="plus"></span></button>
+                <div class="faq-a"><p>Напишите мне в Telegram <a href="https://t.me/dnl105" target="_blank" style="color:var(--neon)">@dnl105</a> — отвечаю быстро и помогу с любым вопросом.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q">Есть ли сопровождение после оформления?<span class="plus"></span></button>
+                <div class="faq-a"><p>Да. Я остаюсь на связи после оформления, помогаю с активацией, подключением сервисов и отвечаю на возникающие вопросы.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT CTA -->
+<section id="contact" class="cta">
+    <div class="container">
+        <div class="cta-box reveal">
+            <h2>Готовы начать?</h2>
+            <p>Напишите мне — подберём решение и оформим всё под ключ.</p>
+            <a href="https://t.me/dnl105" class="btn-primary" target="_blank">
+                Получить консультацию
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>© 2026 Данил · Консультант по банковским продуктам · <a href="https://t.me/dnl105" target="_blank">@dnl105</a></p>
+    </div>
+</footer>
+
+<script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+        el.style.transitionDelay = (i % 4 * 0.08) + 's';
+        io.observe(el);
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.parentElement;
+            const answer = item.querySelector('.faq-a');
+            const isActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(i => {
+                i.classList.remove('active');
+                i.querySelector('.faq-a').style.maxHeight = null;
+            });
+            if (!isActive) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            }
+        });
+    });
+</script>
+</body>
+</html>
